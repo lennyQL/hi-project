@@ -16,7 +16,7 @@
     <div id="app" class="weather_box">
       <!-- <v-container>Hello world</v-container> -->
         
-      <!-- 追加 -->
+      <!-- 都市の検索 -->
       <div class="weather_search">
         <p>
           都市名：<input type="text" v-model="findCity">
@@ -28,6 +28,8 @@
         <p class="weather_error" v-if="isError">都市が見つかりません</p>
         <!-- <p>{{ isError }}</p> -->
       </div>
+
+      <!-- 検索結果の表示 -->
       <div class="weather_info" v-if="!isError && city">
         <p class="weather_dt">{{ dt }}</p>
         <p class="weather_city">{{ city }}</p>
@@ -36,15 +38,23 @@
         <p class="weather_condition">{{ condition.description }}</p>
         <p class="weather_temp">{{ temp | roundUp }}&deg;C</p>
       </div>
+
+      <!-- 日にちの移動 -->
+      <div v-if="id !== null">
+        <button v-if="id > 0" v-on:click="changeData(id,-1)">前の日</button>
+        <button v-if="id < 5" v-on:click="changeData(id,1)">次の日</button>
+      </div>
+
+      <!-- 5日間の天気予報 -->
       <div class="weather_info" v-if="!isError && city">
         <ul>
             <li v-for="item in fivedays">
             <div >
-              <button>
+              <button v-on:click="changeData(item.id)">
               <p class="weather_dt">{{ item.dt }}</p>
               <!-- <p class="weather_condition">{{ item.condition.main }}</p> -->
-              <img v-bind:src="'http://openweathermap.org/img/w/' + condition.icon + '.png' "/>
-              <p class="weather_condition">{{ condition.description }}</p>
+              <img v-bind:src="'http://openweathermap.org/img/w/' + item.condition.icon + '.png' "/>
+              <p class="weather_condition">{{ item.condition.description }}</p>
               <p class="weather_temp">{{ item.temp | roundUp }}&deg;C</p>
               </button>
             </div>

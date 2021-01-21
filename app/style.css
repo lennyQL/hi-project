@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+/* "Alegreya Sans SC" 英語のみの部分に使えるかも。おしゃれ */
+@import url("https://fonts.googleapis.com/css?family=Alegreya+Sans+SC:300");
+
+/* Noto Sans JP　と　Lato のフォントファミリ*/
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700|Noto+Sans+JP:400,700");
+
+* {
+  font-family: "Lato", "Noto Sans JP", "游ゴシック Medium", "游ゴシック体",
+    "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN",
+    "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック",
+    "MS PGothic", sans-serif;
+  /* border line　を可視化する */
+  /* border: 1px solid #aaa; */
+  text-align: center;
+}
+
+h1.title {
+  font-family: "Alegreya Sans SC";
+}
+
+canvas { border: 1px solid black; }
+
+div {
+    background-color: aquamarine;
+    border: 1px solid black;
+}
+
+ul {
+    list-style: none;
+    overflow: hidden;
+    /* text-align: center; */
+}
+
+ul li {
+    text-decoration: none;
+    float: left;
+}

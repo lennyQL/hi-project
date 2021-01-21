@@ -125,6 +125,7 @@ let app = new Vue({
             if (res !== undefined &&
                 res.status == 404) { // エラー(都市検索できなかった)時にフラグ立てる
                 this.isError = true
+                this.id = null
             }
             console.log(res)
         },

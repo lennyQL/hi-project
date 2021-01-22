@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"> -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet"> -->
-    <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -12,63 +13,290 @@
   </head>
 
   <body>
-    <h1>天気予報</h1>
     <div id="app" class="weather_box">
-      <!-- <v-container>Hello world</v-container> -->
+      <v-app>
+        <v-main>
+
+        <!-- タイトル -->
+        <!-- <h1 class="text-h4">近日の天気は？</h1> -->
+
+        <!-- <v-row
+          justify="center"
+        > -->
+
+        <!-- 都市の検索 -->
+        <v-card
+          class="mx-auto my-auto mb-2 px-16 py-8"
+          max-width="800"
+          elevation="4"
+        ><!-- style="height:100%" -->
+          <v-card-title
+            class="text-h4 py-2"  
+          >天気情報を検索
+          </v-card-title>
+
+          <p 
+            style="text-align: left;"
+            class="px-4 my-4"
+          > <strong>都市名：</strong>（例）Fukuoka，福岡 
+          </p>
+
+          <v-card
+            class="mx-auto my-auto px-8 py-4 pt-6"
+            color="blue lighten-5"
+            hover
+          >
+          <v-row
+            align-content="center"
+            justify="center"
+          >
+            <v-text-field 
+              v-model="findCity"
+              class="mx-8 py-2"
+              style="font-weight: bolder;"
+              label="City"
+              placeholder="都市の名前をここに記入"
+            ></v-text-field>
+
+            <v-btn 
+              color="primary" 
+              v-on:click="getForecast()"
+              fab
+            >
+              <!-- 検索アイコン -->
+              <v-icon>
+                mdi-magnify
+              </v-icon>
+            </v-btn>
+          </v-row>
+          </v-card>
+        <!-- </v-card> -->
+
+          <!-- 検索エラー -->
+          <v-sheet 
+            class="mx-auto my-2 py-4 text-h6 white--text" 
+            v-if="isError"
+            color="error"
+            outlined
+          >
+              都市が見つかりません
+          </v-sheet>
+
+        </v-card>
+
+
+
+        <!-- 検索結果の表示 -->
+        <v-container
+          v-if="!isError && city"
+        >
+
+        <!-- <v-row
+          no-gutters
+        >
+
+        <v-card
+          height="200"
+          width="100"
+          @click="changeData(id, -1)"
+          hover
+        >
+          <
+        </v-card> -->
         
-      <!-- 都市の検索 -->
-      <div class="weather_search">
-        <p>
-          都市名：<input type="text" v-model="findCity">
-          <!-- <button v-on:click="getWeather()">天気</button>
-          <button v-on:click="getForecast()">予報</button> -->
-          <button v-on:click="getForecast()">検索</button>
-        </p>
-        <p>{{ findCity }}</p>
-        <p class="weather_error" v-if="isError">都市が見つかりません</p>
-        <!-- <p>{{ isError }}</p> -->
-      </div>
 
-      <!-- 検索結果の表示 -->
-      <div class="weather_info" v-if="!isError && city">
-        <p class="weather_dt">{{ dt }}</p>
-        <p class="weather_city">{{ city }}</p>
-        <!-- <p class="weather_condition">{{ condition.main }}</p> -->
-        <img v-bind:src="'http://openweathermap.org/img/w/' + condition.icon + '.png' "/>
-        <p class="weather_condition">{{ condition.description }}</p>
-        <p class="weather_temp">{{ temp | roundUp }}&deg;C</p>
-      </div>
+        <v-card
+          v-if="!isError && city"
+          max-width="800"
+          class="mx-auto my-auto"
+          color="light-blue lighten-5"
+          elevation="6"
+        >
+          <p class="weather_dt"><strong>{{ dt }}</strong></p>
+          <p class="weather_city"><strong>{{ city }}</strong></p>
+          <!-- <p class="weather_condition">{{ condition.main }}</p> -->
+          <img v-bind:src="'http://openweathermap.org/img/w/' + condition.icon + '.png' "/>
+          <p class="weather_condition">{{ condition.description }}</p>
+          <!-- <p class="weather_temp">{{ temp | roundUp }}&deg;C</p> -->
+          <p>{{ main.temp_min | roundUp }}&deg;C / {{ main.temp_max | roundUp }}&deg;C</p>
+          <p>{{ main.humidity }}%</p>
+        <!-- </v-card> -->
 
-      <!-- 日にちの移動 -->
-      <div v-if="id !== null">
-        <button v-if="id > 0" v-on:click="changeData(id,-1)">前の日</button>
-        <button v-if="id < fivedays.length-1" v-on:click="changeData(id,1)">次の日</button>
-      </div>
+        <!-- スライド id何番目かわかりやすくするため -->
+          <v-slider
+            @change="changeData(id)"
+            v-model="id"
+            :max="fivedays.length-1"
+            thick-size="fivedays.length"
+            ticks="always"
+            class="mx-4"
+          ></v-slider>
+        </v-card>
 
-      <!-- 5日間の天気予報 -->
-      <div class="weather_info" v-if="!isError && city">
-        <ul>
-            <li v-for="item in fivedays">
-            <div >
-              <button v-on:click="changeData(item.id)">
-              <p class="weather_dt">{{ item.dt }}</p>
-              <!-- <p class="weather_condition">{{ item.condition.main }}</p> -->
-              <img v-bind:src="'http://openweathermap.org/img/w/' + item.condition.icon + '.png' "/>
-              <p class="weather_condition">{{ item.condition.description }}</p>
-              <p class="weather_temp">{{ item.temp | roundUp }}&deg;C</p>
-              </button>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <!-- <div v-else-if="isError">
-        <p class="weather_error">都市が見つかりません</p>
-      </div> -->
-      <!-- <p v-if="condition.main == 'Rain'"><img src="img/rain.jpg" alt="Rainy"></p>
-      <p v-else-if="condition.main == 'Clouds'"><img src="img/cloudy.jpg" alt="Cloudy"></p>
-      <p v-else-if="condition.main == 'Clear'"><img src="img/sunny.jpg" alt="Sunny"></p>
-      <p v-else><img src="img/sunset.jpg" alt="Sunset"></p> -->
+
+        <!-- <v-card
+          class="mx-auto my-auto"
+          height="200"
+          width="100"
+          @click="changeData(id, 1)"
+          hover
+        >
+          >
+        </v-card>
+
+        </v-row> -->
+        
+
+        <!-- 日にちの移動 -->
+        <div 
+          v-if="id !== null"
+          class="my-4"
+        >
+          <v-btn 
+            v-if="id > 0" 
+            v-on:click="changeData(id,-1)"
+            depressed
+            outlined
+            hover
+          >
+            <!-- 前の日 -->
+            <v-icon>
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+          <v-btn 
+            v-else 
+            v-on:click="changeData(id,-1)"
+            depressed
+            disabled
+          >
+            <!-- 前の日 -->
+            <v-icon>
+              mdi-chevron-left
+            </v-icon>
+          </v-btn>
+          <v-btn
+            v-if="id < fivedays.length-1" 
+            v-on:click="changeData(id,1)"
+            depressed
+            outlined
+            hover
+          >
+            <!-- 次の日 -->
+            <v-icon>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+          <v-btn 
+            v-else 
+            v-on:click="changeData(id,1)"
+            depressed
+            disabled
+          >
+            <!-- 次の日 -->
+            <v-icon>
+              mdi-chevron-right
+            </v-icon>
+          </v-btn>
+        </div>
+      
+
+
+        <!-- 5日間の天気予報 -->
+        <v-sheet
+          class="mx-auto"
+          elevation="8"
+          max-width="800"
+        >
+          <v-slide-group
+            class="pa-4"
+            center-active
+            show-arrows
+          >
+            <v-slide-item
+              v-for="item in fivedays"
+              :key="item.id"
+              v-slot="{ active, toggle }"
+            >
+              <v-card
+                :color="(item.id == id) ? 'blue lighten-3' : 'grey lighten-5'"
+                class="ma-4"
+                height="200"
+                width="100"
+                @click="toggle"
+                v-on:click="changeData(item.id)"
+                hover
+              >
+                <v-row
+                  class="fill-height"
+                  align="center"
+                  justify="center"
+                >
+                  <v-scale-transition>
+                    <div>
+                      <p class="weather_dt"><strong>{{ item.dt }}</strong></p>
+                      <!-- <p class="weather_condition">{{ item.condition.main }}</p> -->
+                      <img v-bind:src="'http://openweathermap.org/img/w/' + item.condition.icon + '.png' "/>
+                      <p class="weather_condition">{{ item.condition.description }}</p>
+                      <p class="weather_temp">{{ item.temp | roundUp }}&deg;C</p>
+                    </div>
+                  </v-scale-transition>
+                </v-row>
+              </v-card>
+            </v-slide-item>
+          </v-slide-group>
+        </v-sheet>
+
+
+
+          <!-- <v-btn
+            color="blue"
+            dark
+            @click="sheet = !sheet"
+          >
+            5日間の天気
+          </v-btn>
+          <v-bottom-sheet 
+            class="weather_info" 
+            v-model="sheet"
+          >
+            <v-sheet
+              class="text-center"
+              height="200"
+            >
+              <ul
+                height="200"
+              >
+
+              <v-row
+                align="center"
+                justify="space-around"
+              >
+                <li v-for="item in fivedays">
+                  <v-card >
+                    <button v-on:click="changeData(item.id)">
+                    <p class="weather_dt">{{ item.dt }}</p>
+                    <img v-bind:src="'http://openweathermap.org/img/w/' + item.condition.icon + '.png' "/>
+                    <p class="weather_condition">{{ item.condition.description }}</p>
+                    <p class="weather_temp">{{ item.temp | roundUp }}&deg;C</p>
+                    </button>
+                  </v-card>
+                </li> 
+              </v-row>
+
+              </ul>
+            </v-sheet>
+          </v-bottom-sheet> -->
+        </v-container>
+
+        <!-- </v-row> -->
+
+      </v-main>
+
+      </v-app>
     </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="app.js"></script>

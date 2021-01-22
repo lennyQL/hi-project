@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet"> -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet"> -->
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <h1>天気予報</h1>
+    <div id="app" class="weather_box">
+      <!-- <v-container>Hello world</v-container> -->
+        
+      <!-- 都市の検索 -->
+      <div class="weather_search">
+        <p>
+          都市名：<input type="text" v-model="findCity">
+          <!-- <button v-on:click="getWeather()">天気</button>
+          <button v-on:click="getForecast()">予報</button> -->
+          <button v-on:click="getForecast()">検索</button>
+        </p>
+        <p>{{ findCity }}</p>
+        <p class="weather_error" v-if="isError">都市が見つかりません</p>
+        <!-- <p>{{ isError }}</p> -->
+      </div>
+
+      <!-- 検索結果の表示 -->
+      <div class="weather_info" v-if="!isError && city">
+        <p class="weather_dt">{{ dt }}</p>
+        <p class="weather_city">{{ city }}</p>
+        <!-- <p class="weather_condition">{{ condition.main }}</p> -->
+        <img v-bind:src="'http://openweathermap.org/img/w/' + condition.icon + '.png' "/>
+        <p class="weather_condition">{{ condition.description }}</p>
+        <p class="weather_temp">{{ temp | roundUp }}&deg;C</p>
+      </div>
+
+      <!-- 日にちの移動 -->
+      <div v-if="id !== null">
+        <button v-if="id > 0" v-on:click="changeData(id,-1)">前の日</button>
+        <button v-if="id < fivedays.length-1" v-on:click="changeData(id,1)">次の日</button>
+      </div>
+
+      <!-- 5日間の天気予報 -->
+      <div class="weather_info" v-if="!isError && city">
+        <ul>
+            <li v-for="item in fivedays">
+            <div >
+              <button v-on:click="changeData(item.id)">
+              <p class="weather_dt">{{ item.dt }}</p>
+              <!-- <p class="weather_condition">{{ item.condition.main }}</p> -->
+              <img v-bind:src="'http://openweathermap.org/img/w/' + item.condition.icon + '.png' "/>
+              <p class="weather_condition">{{ item.condition.description }}</p>
+              <p class="weather_temp">{{ item.temp | roundUp }}&deg;C</p>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- <div v-else-if="isError">
+        <p class="weather_error">都市が見つかりません</p>
+      </div> -->
+      <!-- <p v-if="condition.main == 'Rain'"><img src="img/rain.jpg" alt="Rainy"></p>
+      <p v-else-if="condition.main == 'Clouds'"><img src="img/cloudy.jpg" alt="Cloudy"></p>
+      <p v-else-if="condition.main == 'Clear'"><img src="img/sunny.jpg" alt="Sunny"></p>
+      <p v-else><img src="img/sunset.jpg" alt="Sunset"></p> -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

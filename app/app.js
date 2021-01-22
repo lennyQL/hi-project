@@ -18,11 +18,14 @@ let app = new Vue({
         condition: {
             main: null  // 天気
         },
+        main: null, // その他の気温情報
         dt: null, // 日時
         findCity: null,
         isError: false,
         forecast: null, // 5日間3時間置きの天気予報のデータ
-        fivedays: []
+        fivedays: [],
+        // その他
+        sheet: false
     },
     // mounted: function(){
     //     // const city = "Fukuok"
@@ -114,6 +117,7 @@ let app = new Vue({
                 this.dt = this.fivedays[0].dt
                 this.temp = this.fivedays[0].temp
                 this.condition = this.fivedays[0].condition
+                this.main = this.fivedays[0].main
 
                 // console.log(this.fivedays);
             }.bind(this))
@@ -123,7 +127,7 @@ let app = new Vue({
                 return error.response
             })
             if (res !== undefined &&
-                res.status == 404) { // エラー(都市検索できなかった)時にフラグ立てる
+                res.status !== 200) { // エラー(都市検索できなかった)時にフラグ立てる
                 this.isError = true
                 this.id = null
             }
@@ -136,6 +140,7 @@ let app = new Vue({
             this.dt = this.fivedays[id].dt
             this.temp = this.fivedays[id].temp
             this.condition = this.fivedays[id].condition
+            this.main = this.fivedays[id].main
         },
         // 前の日，次の日に情報を変更
         changeData: function(id, i) {
@@ -144,6 +149,7 @@ let app = new Vue({
             this.dt = this.fivedays[this.id].dt
             this.temp = this.fivedays[this.id].temp
             this.condition = this.fivedays[this.id].condition
+            this.main = this.fivedays[this.id].main
         }
     }
 })

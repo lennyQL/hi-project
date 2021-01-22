@@ -7,7 +7,7 @@
 @import url("https://fonts.googleapis.com/css?family=Lato:400,700|Noto+Sans+JP:400,700");
 
 * {
-  font-family: "Lato", "Noto Sans JP", "游ゴシック Medium", "游ゴシック体",
+  font-family: "Roboto", "Lato", "Noto Sans JP", "游ゴシック Medium", "游ゴシック体",
     "Yu Gothic Medium", YuGothic, "ヒラギノ角ゴ ProN",
     "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, "ＭＳ Ｐゴシック",
     "MS PGothic", sans-serif;
@@ -16,24 +16,29 @@
   text-align: center;
 }
 
-h1.title {
-  font-family: "Alegreya Sans SC";
-}
+/* h1 {
+  font-family: "Roboto", "Alegreya Sans SC";
+} */
 
-canvas { border: 1px solid black; }
+/* canvas { border: 1px solid black; } */
 
-div {
+/* div {
     background-color: aquamarine;
     border: 1px solid black;
+} */
+
+#app {
+    height: 100vh; 
 }
 
 ul {
     list-style: none;
     overflow: hidden;
-    /* text-align: center; */
+    text-align: center;
+    /* display: flexbox; */
 }
 
 ul li {
     text-decoration: none;
-    float: left;
+    /* float: left; */
 }

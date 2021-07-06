@@ -19,7 +19,7 @@
 例えば，検索フォームに「福岡」と入力すると，福岡市の今日の詳細な天気情報が表示され，その下には今日から 5 日後までの天気情報一覧リストが表示される．
 一覧リストから日付を適当に選択すると，その日付の天気予報の情報が表示される．
 
-本アプリの作成にあたって，フレイムワークとして Vue.js，天気情報取得の API として OpenWetherMap を用いた．
+本アプリの作成にあたって，フレイムワークとして [Vue.js](https://jp.vuejs.org)，天気情報取得の API として [OpenWetherMap](https://openweathermap.org) を用いた．
 
 ![Webページの全体像](report/full1.png 'full'){#fig:full}
 
